@@ -1,5 +1,6 @@
 from django.db import models
 import uuid # Required for unique book instances
+from django.urls import reverse
 
 # Create your models here.
 
@@ -43,6 +44,13 @@ class Book(models.Model):
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this book."""
         return reverse('book-detail', args=[str(self.id)])
+    
+    def display_genre(self):
+        """Creates a string for the Genre. Required as we have a ManyToMany mapping on genre, too cost intensive to get Genre"""
+        return ', '.join(genre.name for genre in self.genre.all()[:3])
+    
+    display_genre.short_description = 'Genre'
+
     
 class BookInstance(models.Model):
     """Model representing a specific copy of a book (i.e. that can be borrowed from the library)."""
